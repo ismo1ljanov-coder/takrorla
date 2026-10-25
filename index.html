@@ -1,0 +1,353 @@
+<title>Takrorla</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Onest:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a single phone-width column like a mushaf page; fixed bottom tab bar; Registan-tile turquoise on cool paper */
+:root{
+  --bg:#F3F6F5; --surface:#FFFFFF; --sunk:#E7EEEC; --line:#D5E0DD;
+  --ink:#10292C; --muted:#5B7371; --accent:#0B7480; --accent-ink:#FFFFFF; --accent-soft:#D6ECEC;
+  --gold:#A8781E; --gold-soft:#F3E7CC; --danger:#B4452F;
+  --ar:"Amiri Quran","Amiri","Traditional Arabic","Noto Naskh Arabic",serif;
+  --ui:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0A1517; --surface:#112124; --sunk:#0D1B1E; --line:#1F3538;
+  --ink:#E3EEEC; --muted:#8AA5A2; --accent:#3EBCC6; --accent-ink:#06262A; --accent-soft:#163B3F;
+  --gold:#D9AE56; --gold-soft:#3A2F17; --danger:#E7826C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1517; --surface:#112124; --sunk:#0D1B1E; --line:#1F3538;
+  --ink:#E3EEEC; --muted:#8AA5A2; --accent:#3EBCC6; --accent-ink:#06262A; --accent-soft:#163B3F;
+  --gold:#D9AE56; --gold-soft:#3A2F17; --danger:#E7826C; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--ui);font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+a{color:var(--accent)}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px calc(96px + env(safe-area-inset-bottom,0px))}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.2}
+h1{font-size:26px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:17px;font-weight:600}
+.lbl{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.muted{color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:center;gap:10px}
+.sp{flex:1;min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:12px;font-weight:600;min-height:46px}
+.btn.pri{background:var(--accent);color:var(--accent-ink)}
+.btn.sec{background:var(--accent-soft);color:var(--ink)}
+.btn.ghost{border:1px solid var(--line);background:var(--surface)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:default}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:12.5px;font-weight:600;background:var(--sunk);color:var(--muted)}
+.chip.gold{background:var(--gold-soft);color:var(--gold)}
+.chip.acc{background:var(--accent-soft);color:var(--accent)}
+.top{display:flex;align-items:flex-start;gap:12px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px}
+.star{width:34px;height:34px;flex:none}
+.streak{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:99px;background:var(--surface);border:1px solid var(--line);font-weight:600}
+/* hero: today's page */
+.today{background:var(--accent);color:var(--accent-ink);border-radius:18px;padding:18px;position:relative;overflow:hidden}
+.today .lbl{color:inherit;opacity:.8}
+.today .pv{font-family:var(--ar);font-size:24px;line-height:2;direction:rtl;text-align:right;margin:8px 0 4px;max-height:96px;overflow:hidden;-webkit-mask-image:linear-gradient(#000 55%,transparent);mask-image:linear-gradient(#000 55%,transparent)}
+.today .btn.pri{background:var(--accent-ink);color:var(--accent)}
+.today .btn.sec{background:rgba(255,255,255,.16);color:inherit}
+.tile{position:absolute;right:-30px;top:-30px;width:140px;height:140px;opacity:.12;pointer-events:none}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.stat b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.list{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.li{display:flex;align-items:center;gap:12px;padding:12px 14px;text-align:left;width:100%;border-top:1px solid var(--line)}
+.li:first-child{border-top:0}
+.li:hover{background:var(--sunk)}
+.badge{width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:10px;background:var(--sunk);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+.arn{font-family:var(--ar);font-size:20px;direction:rtl}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--sunk);border-radius:12px;padding:4px;gap:4px}
+.seg button{padding:9px;border-radius:9px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+input[type=search],input[type=number],select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+/* mushaf page */
+.pagebar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;gap:8px;padding-block:8px;margin-bottom:8px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.icon{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:var(--surface);border:1px solid var(--line);flex:none}
+.icon svg{width:20px;height:20px}
+.mushaf{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 16px;position:relative}
+.mushaf::before{content:"";position:absolute;inset:6px;border:1px solid var(--gold-soft);border-radius:13px;pointer-events:none}
+.surah{margin:6px 0 12px;padding:10px;border-radius:12px;background:var(--gold-soft);color:var(--gold);text-align:center;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.surah .arn{font-size:22px;color:var(--ink)}
+.bas{font-family:var(--ar);font-size:24px;text-align:center;direction:rtl;margin:0 0 10px}
+.ayah{padding:10px 4px;border-top:1px dashed var(--line)}
+.ayah:first-of-type{border-top:0}
+.ar{font-family:var(--ar);font-size:27px;line-height:2.15;direction:rtl;text-align:right;word-spacing:2px}
+.ar.big{font-size:32px}
+.mk{font-family:var(--ar);color:var(--gold);white-space:nowrap}
+.tr{font-size:14.5px;color:var(--ink);margin-top:4px}
+.tr .n{color:var(--muted);font-weight:600;margin-right:4px}
+.fnb{margin-top:6px;font-size:12.5px;font-weight:600;color:var(--accent);padding:4px 0}
+.fn{margin-top:6px;padding:10px 12px;border-radius:10px;background:var(--sunk);font-size:13.5px;color:var(--muted)}
+.w{transition:filter .2s,opacity .2s}
+.hide .w{filter:blur(7px);opacity:.55}
+.hide .w.hint{filter:none;opacity:1}
+.hide.rev .w{filter:none;opacity:1}
+.tapnote{font-size:12px;color:var(--muted);text-align:center;margin-top:4px}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.steps div{height:5px;border-radius:9px;background:var(--line)}
+.steps div.on{background:var(--accent)}
+.counter{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-radius:12px;background:var(--sunk)}
+.dots{display:flex;gap:5px}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--accent)}
+.grade{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grade button{padding:14px 8px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-weight:600;display:flex;flex-direction:column;gap:2px}
+.grade button small{font-weight:500;color:var(--muted);font-size:11.5px}
+/* progress grid */
+.grid604{display:flex;flex-direction:column;gap:4px}
+.jr{display:grid;grid-template-columns:26px 1fr;gap:6px;align-items:center}
+.jr span{font-size:10.5px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.cells{display:grid;grid-template-columns:repeat(22,1fr);gap:2px}
+.cells i{aspect-ratio:1;border-radius:2px;background:var(--sunk);max-width:100%}
+.cells i.l1{background:var(--accent-soft)}
+.cells i.l2{background:var(--accent)}
+.cells i.due{background:var(--gold)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.days{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.days i{aspect-ratio:1;border-radius:4px;background:var(--sunk)}
+.days i.on{background:var(--accent)}
+.tips li{margin-bottom:8px}
+.note{font-size:13px;color:var(--muted);padding:12px 14px;border-radius:12px;border:1px dashed var(--line)}
+.audio{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;font-size:14px;z-index:30;max-width:calc(100% - 32px)}
+/* tab bar */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 9px;font-size:11.5px;font-weight:600;color:var(--muted);position:relative}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button[aria-current="page"]{color:var(--accent)}
+nav.tabs .dot{position:absolute;top:6px;left:calc(50% + 8px);min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--gold);color:#fff;font-size:10.5px;line-height:17px}
+.loading{padding:40px 0;text-align:center;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap" id="app"><div class="loading">Yuklanmoqda…</div></div>
+<nav class="tabs" aria-label="Bo'limlar"><div class="in" id="tabs"></div></nav>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+"use strict";
+var META=null, CHUNK={}, view={name:'home'}, audio=null, audioQ=[], audioOn=false;
+var RECITERS=[["Alafasy_128kbps","Mishary Alafasy"],["Husary_128kbps","Mahmud Xalil Husariy"],["Minshawy_Murattal_128kbps","Muhammad Siddiq Minshoviy"]];
+var IV=[1,3,7,14,30,60,120];
+var K='takrorla.v1';
+var S=load();
+function load(){var d={plan:'amma',pages:{},days:{},tr:true,rec:RECITERS[0][0]};try{var r=localStorage.getItem(K);if(r){var o=JSON.parse(r);for(var k in o)d[k]=o[k]}}catch(e){}return d}
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+function $(s){return document.querySelector(s)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function today(o){var d=new Date();d.setDate(d.getDate()+(o||0));return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function ard(n){return String(n).replace(/\d/g,function(x){return'٠١٢٣٤٥٦٧٨٩'[x]})}
+function toast(t){var el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){el.hidden=true},2200)}
+var MON=['yanvar','fevral','mart','aprel','may','iyun','iyul','avgust','sentabr','oktabr','noyabr','dekabr'];
+var WD=['Yakshanba','Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba'];
+function niceDate(){var d=new Date();return WD[d.getDay()]+', '+d.getDate()+'-'+MON[d.getMonth()]}
+
+/* ---------- data ---------- */
+function getPage(p){var b=Math.floor((p-1)/20);if(CHUNK[b])return Promise.resolve(CHUNK[b][p]);
+  return fetch('data/p'+b+'.json').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){CHUNK[b]=j;return j[p]})}
+function chap(n){return META.chapters[n-1]}
+function juzOf(p){var j=1;for(var i=0;i<30;i++)if(META.juz[i]<=p)j=i+1;return j}
+function pageLabel(p){var g=META.pages[p-1],c=chap(g[0]);
+  var e=p<604?META.pages[p]:null;var names=[c.uz];
+  if(e&&e[0]!==g[0]&&!(e[1]===1&&e[0]===g[0]+1))names.push(chap(e[0]).uz);
+  if(p===604)names=['Ixlos, Falaq, Nos'];
+  return names.join(' – ')}
+function planOrder(){var o=[];if(S.plan==='start'){for(var i=1;i<=604;i++)o.push(i);return o}
+  for(var j=29;j>=0;j--){var a=META.juz[j],b=j===29?604:META.juz[j+1]-1;for(var p=a;p<=b;p++)o.push(p)}return o}
+function nextNew(){var o=planOrder();for(var i=0;i<o.length;i++)if(!S.pages[o[i]])return o[i];return null}
+function dueList(){var t=today(),r=[];for(var p in S.pages){if(S.pages[p].due<=t)r.push(+p)}return r.sort(function(a,b){return S.pages[a].due<S.pages[b].due?-1:a-b})}
+function learnedToday(){var t=today(),n=0;for(var p in S.pages)if(S.pages[p].start===t)n++;return n}
+function streak(){var n=0,o=0;if(!S.days[today()])o=-1;while(S.days[today(o-n)])n++;return n}
+function mark(){S.days[today()]=1}
+function schedule(p,g){var x=S.pages[p]||{lvl:-1,start:today(),reps:0};
+  if(g==='new'){x.lvl=0}else if(g==='good'){x.lvl=Math.min(IV.length-1,x.lvl+1)}else if(g==='ok'){x.lvl=Math.max(0,x.lvl)}else{x.lvl=0}
+  x.due=today(IV[x.lvl]);x.reps=(x.reps||0)+1;x.last=today();S.pages[p]=x;mark();save()}
+
+/* ---------- icons ---------- */
+var I={
+home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>',
+book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5zM12 6.5v13"/></svg>',
+loop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.6L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.6L20 16m0 4v-4h-4"/></svg>',
+chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>',
+back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>',
+stop:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></svg>',
+fire:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c3.9 0 7-2.8 7-6.6 0-3.5-2.6-5.7-4-8.4-.6 2.2-1.8 3.4-3 4-.4-2.6-1.7-5-4-7 .2 3.5-3 6.2-3 10.6C5 18.2 8.1 21 12 21z"/></svg>',
+eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>'
+};
+var STAR='<svg class="star" viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="var(--accent)" stroke-width="2"><rect x="9" y="9" width="22" height="22" rx="2"/><rect x="9" y="9" width="22" height="22" rx="2" transform="rotate(45 20 20)"/></g><circle cx="20" cy="20" r="4.5" fill="var(--gold)"/></svg>';
+var TILE='<svg class="tile" viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="8" y="8" width="24" height="24"/><rect x="8" y="8" width="24" height="24" transform="rotate(45 20 20)"/><circle cx="20" cy="20" r="7"/></g></svg>';
+
+/* ---------- tabs ---------- */
+function tabs(){var d=dueList().length,cur=view.tab||view.name;
+  var t=[['home','Bugun',I.home],['quran',"Qur'on",I.book],['review','Takror',I.loop],['stats','Natija',I.chart]];
+  $('#tabs').innerHTML=t.map(function(x){return '<button type="button" data-tab="'+x[0]+'"'+(cur===x[0]?' aria-current="page"':'')+'>'+x[2]+x[1]+(x[0]==='review'&&d?'<span class="dot num">'+d+'</span>':'')+'</button>'}).join('')}
+$('#tabs').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(b)go({name:b.dataset.tab})});
+function go(v){stopAudio();view=v;render();window.scrollTo(0,0)}
+
+/* ---------- views ---------- */
+function render(){tabs();var a=$('#app');
+  ({home:vHome,quran:vQuran,reader:vReader,learn:vLearn,review:vReview,stats:vStats,about:vAbout})[view.name](a)}
+
+function vHome(a){
+  var nn=nextNew(),due=dueList(),lt=learnedToday(),st=streak(),tot=Object.keys(S.pages).length;
+  var h='<div class="top"><div class="brand sp">'+STAR+'<div><h1>Takrorla</h1><div class="muted" style="font-size:13px">'+niceDate()+'</div></div></div><div class="streak num" title="Ketma-ket kunlar">'+I.fire+st+' kun</div></div>';
+  h+='<div class="today">'+TILE+'<div class="lbl">Bugungi sahifa</div>';
+  if(lt>0&&nn){h+='<h2 style="font-size:21px;margin-top:6px">Bugungi sahifa yodlandi</h2><p style="margin:6px 0 14px;opacity:.85">Barakalla. Endi takrorlash va eski sahifalarni mustahkamlash vaqti. Keyingisi: '+nn+'-bet.</p>'}
+  else if(nn){h+='<h2 style="font-size:21px;margin-top:6px" class="num">'+nn+'-bet · '+esc(pageLabel(nn))+'</h2><div style="opacity:.85;font-size:13px" class="num">'+juzOf(nn)+'-juz · '+META.pages[nn-1][2]+' oyat</div><div class="pv" id="pv"></div>'}
+  else h+='<h2 style="margin-top:6px">Butun Qur\'on yodlandi. Alloh qabul qilsin.</h2>';
+  h+='<div class="row" style="margin-top:6px">';
+  if(nn&&!lt)h+='<button class="btn pri sp" data-act="learn" data-p="'+nn+'">Yodlashni boshlash</button>';
+  else if(nn)h+='<button class="btn pri sp" data-act="learn" data-p="'+nn+'">Yana bir sahifa</button>';
+  h+='<button class="btn sec" data-tab2="review">'+I.loop.replace('<svg','<svg width="18" height="18"')+due.length+'</button></div></div>';
+  h+='<div class="stats3" style="margin-top:12px"><div class="stat"><b>'+tot+'</b><span>sahifa yodlangan</span></div><div class="stat"><b>'+due.length+'</b><span>bugun takror</span></div><div class="stat"><b>'+Math.round(tot/604*1000)/10+'%</b><span>Qur\'ondan</span></div></div>';
+  if(due.length){h+='<div class="row" style="margin:22px 0 8px"><h2 class="sp">Takrorlash vaqti keldi</h2><span class="chip gold num">'+due.length+' ta</span></div><div class="list">'+due.slice(0,4).map(function(p){return liPage(p,'review')}).join('')+'</div>';
+    if(due.length>4)h+='<button class="btn ghost block" style="margin-top:8px" data-tab2="review">Hammasini ko\'rish</button>'}
+  h+='<div class="row" style="margin:22px 0 8px"><h2 class="sp">Yodlash tartibi</h2></div><div class="seg" role="group" aria-label="Tartib"><button type="button" data-plan="amma" aria-pressed="'+(S.plan==='amma')+'">30-juzdan boshlab</button><button type="button" data-plan="start" aria-pressed="'+(S.plan==='start')+'">Fotihadan boshlab</button></div>';
+  h+='<p class="muted" style="font-size:13px;margin:8px 2px 0">'+(S.plan==='amma'?"Qisqa suralardan boshlanadi: 30-juz, keyin 29, 28… Har bir juz ichida sahifalar tartib bilan. Ko'pchilik ustozlar yangi boshlaganlarga shu yo'lni tavsiya qiladi.":"Mushaf tartibida: 1-betdan 604-betgacha.")+'</p>';
+  h+='<button class="li card" style="margin-top:22px;border-radius:var(--r)" data-go="about"><span class="badge" style="background:var(--gold-soft);color:var(--gold)">?</span><span class="sp"><b>Qanday yodlash kerak</b><br><span class="muted" style="font-size:13px">Usul, takrorlash jadvali va manbalar</span></span>'+I.next.replace('<svg','<svg width="18" height="18"')+'</button>';
+  a.innerHTML=h;
+  if(nn&&!lt)getPage(nn).then(function(v){var el=$('#pv');if(el)el.innerHTML=v.slice(0,3).map(function(x){return esc(x[2])+' <span class="mk">'+'۝'+ard(x[1])+'</span>'}).join(' ')}).catch(function(){});
+}
+function liPage(p,act){var x=S.pages[p],g=META.pages[p-1];
+  var sub=x?(x.due<=today()?'Bugun takrorlanadi':'Keyingi takror: '+x.due):g[2]+' oyat';
+  return '<button class="li" data-act="'+act+'" data-p="'+p+'"><span class="badge num">'+p+'</span><span class="sp"><b>'+esc(pageLabel(p))+'</b><br><span class="muted num" style="font-size:12.5px">'+juzOf(p)+'-juz · '+sub+'</span></span>'+I.next.replace('<svg','<svg width="18" height="18"')+'</button>'}
+
+function vQuran(a){var tab=view.tab2||'sura',q=view.q||'';
+  var h='<h1>Qur\'oni Karim</h1><p class="muted" style="margin:4px 0 14px;font-size:13px">Tarjima: Shayx Muhammad Sodiq Muhammad Yusuf</p>';
+  h+='<div class="seg" role="group"><button type="button" data-qt="sura" aria-pressed="'+(tab==='sura')+'">114 sura</button><button type="button" data-qt="juz" aria-pressed="'+(tab==='juz')+'">30 juz</button><button type="button" data-qt="page" aria-pressed="'+(tab==='page')+'">Sahifa</button></div><div style="height:12px"></div>';
+  if(tab==='sura'){h+='<input type="search" id="qs" placeholder="Sura nomi yoki raqami" value="'+esc(q)+'" aria-label="Sura qidirish"><div style="height:10px"></div><div class="list" id="sl"></div>'}
+  else if(tab==='juz'){h+='<div class="list">'+META.juz.map(function(p,i){var e=i<29?META.juz[i+1]-1:604,done=0;for(var k=p;k<=e;k++)if(S.pages[k])done++;
+    return '<button class="li" data-read="'+p+'"><span class="badge num">'+(i+1)+'</span><span class="sp"><b>'+(i+1)+'-juz</b><br><span class="muted num" style="font-size:12.5px">'+p+'–'+e+'-betlar · '+chap(META.pages[p-1][0]).uz+'</span></span>'+(done?'<span class="chip acc num">'+done+'/'+(e-p+1)+'</span>':'')+'</button>'}).join('')+'</div>'}
+  else{h+='<div class="card stack"><label class="lbl" for="pn">Sahifa raqami (1–604)</label><input type="number" id="pn" min="1" max="604" inputmode="numeric" value="'+(view.lastPage||1)+'"><button class="btn pri" data-act="openpn">Ochish</button></div>'}
+  a.innerHTML=h;if(tab==='sura')drawSuras(q);
+  var qs=$('#qs');if(qs)qs.addEventListener('input',function(){view.q=qs.value;drawSuras(qs.value)})}
+function drawSuras(q){q=(q||'').toLowerCase().replace(/[ʼ'‘’`]/g,"'").trim();
+  var r=META.chapters.filter(function(c){return !q||String(c.n)===q||c.uz.toLowerCase().indexOf(q)>=0||c.ar.indexOf(q)>=0});
+  $('#sl').innerHTML=r.length?r.map(function(c){return '<button class="li" data-read="'+c.p+'" data-s="'+c.n+'"><span class="badge num">'+c.n+'</span><span class="sp"><b>'+esc(c.uz)+'</b><br><span class="muted num" style="font-size:12.5px">'+c.v+' oyat · '+(c.t==='M'?'Makkiy':'Madaniy')+' · '+c.p+'-bet</span></span><span class="arn">'+c.ar+'</span></button>'}).join(''):'<div class="li muted">Bunday sura topilmadi. Nomini yoki 1–114 raqamini yozing.</div>'}
+
+function ayahHTML(v,o){o=o||{};var s=v[0],n=v[1],h='';
+  if(n===1){var c=chap(s);h+='<div class="surah"><span class="lbl" style="color:inherit">'+c.n+'. '+esc(c.uz)+'</span><span class="arn">سُورَةُ '+c.ar+'</span><span class="lbl num" style="color:inherit">'+c.v+' oyat</span></div>';if(s!==1&&s!==9)h+='<div class="bas">'+META.bas+'</div>'}
+  var words=v[2].split(' ').map(function(w,i){return '<span class="w'+(i===0?' hint':'')+'">'+esc(w)+'</span>'}).join(' ');
+  h+='<div class="ayah" data-k="'+s+':'+n+'"><div class="ar'+(o.big?' big':'')+'">'+words+' <span class="mk">۝'+ard(n)+'</span></div>';
+  if(o.tr)h+='<div class="tr"><span class="n num">'+s+':'+n+'</span>'+esc(v[3])+'</div>';
+  if(o.tr&&v[4])h+='<button class="fnb" data-fn="'+s+':'+n+'">Izohni ko\'rish</button><div class="fn" id="fn'+s+'_'+n+'" hidden>'+esc(v[4])+'</div>';
+  return h+'</div>'}
+function srcNote(){return '<p class="muted" style="font-size:11.5px;margin:12px 2px 0">Arabcha matn: Tanzil.net, Uthmoniy rasm (o\'zgartirilmagan). Tarjima va izohlar: Shayx Muhammad Sodiq Muhammad Yusuf, QuranEnc.com, uzbek_sadiq v1.0.1.</p>'}
+
+function audioBar(p){return '<div class="audio card" style="padding:10px 12px"><button class="icon" data-act="play" data-p="'+p+'" aria-label="Sahifani tinglash" id="playb">'+I.play+'</button><span class="sp" id="astat" style="font-size:13px">Sahifani tinglash</span><select id="rec" aria-label="Qori" style="width:auto;padding:8px 10px;font-size:13px">'+RECITERS.map(function(r){return '<option value="'+r[0]+'"'+(S.rec===r[0]?' selected':'')+'>'+r[1]+'</option>'}).join('')+'</select></div>'}
+
+function vReader(a){var p=view.p;view.lastPage=p;view.tab='quran';tabs();
+  var x=S.pages[p];
+  a.innerHTML='<div class="pagebar"><button class="icon" data-go="quran" aria-label="Orqaga">'+I.back+'</button><div class="sp"><b class="num">'+p+'-bet</b><div class="muted num" style="font-size:12.5px">'+esc(pageLabel(p))+' · '+juzOf(p)+'-juz</div></div><button class="icon" data-read="'+(p-1)+'" '+(p<=1?'disabled':'')+' aria-label="Oldingi sahifa">'+I.back+'</button><button class="icon" data-read="'+(p+1)+'" '+(p>=604?'disabled':'')+' aria-label="Keyingi sahifa">'+I.next+'</button></div>'+
+  audioBar(p)+'<div class="row" style="margin:10px 0"><label class="row sp" style="gap:8px;font-size:14px"><input type="checkbox" id="trt" '+(S.tr?'checked':'')+'> Tarjima va izohlar</label>'+(x?'<span class="chip acc">Yodlangan</span>':'<button class="btn sec" style="min-height:38px;padding:8px 12px" data-act="learn" data-p="'+p+'">Shu sahifani yodlash</button>')+'</div><div class="mushaf" id="mp"><div class="loading">Sahifa yuklanmoqda…</div></div>'+srcNote();
+  getPage(p).then(function(v){$('#mp').innerHTML=v.map(function(x){return ayahHTML(x,{tr:S.tr})}).join('')}).catch(loadErr)}
+function loadErr(){var m=$('#mp')||$('#app');m.innerHTML='<div class="note">Sahifani yuklab bo\'lmadi. Internet aloqasini tekshirib, sahifani qayta oching.</div>'}
+
+/* learn: 4 steps */
+function vLearn(a){var p=view.p,st=view.step||0;view.tab='home';tabs();
+  getPage(p).then(function(v){view.v=v;drawLearn(a)}).catch(function(){a.innerHTML='';loadErr()})}
+function drawLearn(a){var p=view.p,st=view.step||0,v=view.v;
+  var head='<div class="pagebar"><button class="icon" data-act="exit" aria-label="Chiqish">'+I.back+'</button><div class="sp"><b class="num">'+p+'-bet yodlash</b><div class="muted" style="font-size:12.5px">'+['1. Tinglash va tushunish','2. Oyatma-oyat yodlash','3. Yoddan sinash','4. Baholash'][st]+'</div></div></div><div class="steps">'+[0,1,2,3].map(function(i){return '<div class="'+(i<=st?'on':'')+'"></div>'}).join('')+'</div>';
+  var h=head;
+  if(st===0){h+='<p class="muted" style="margin:0 0 12px">Avval sahifani qori ovozida 2–3 marta tinglang va ma\'nosini o\'qing. Ma\'nosini tushungan oyat oson yodlanadi.</p>'+audioBar(p)+'<div style="height:10px"></div><div class="mushaf">'+v.map(function(x){return ayahHTML(x,{tr:true})}).join('')+'</div><div style="height:14px"></div><button class="btn pri block" data-act="step" data-s="1">Tushundim, yodlashga o\'tish</button>'}
+  else if(st===1){var i=view.ai||0,x=v[i],c=view.cnt||{look:0,blind:0},hid=!!view.hid;
+    h+='<div class="row" style="margin-bottom:10px"><span class="chip acc num">'+(i+1)+' / '+v.length+'-oyat</span><span class="sp"></span><button class="btn ghost" style="min-height:38px;padding:6px 12px" data-act="playone" data-k="'+x[0]+':'+x[1]+'">'+I.play.replace('<svg','<svg width="16" height="16"')+' Takror tinglash</button></div>';
+    h+='<div class="mushaf'+(hid?' hide':'')+'" id="one">'+ayahHTML(x,{tr:!hid,big:true})+(hid?'<div class="tapnote">Yoddan o\'qing. Tekshirish uchun oyatni bosing.</div>':'')+'</div><div style="height:12px"></div>';
+    h+='<div class="stack"><div class="counter"><div><b>Qarab o\'qish</b><div class="muted" style="font-size:12.5px">5 marta, ovoz chiqarib</div></div><div class="row"><div class="dots">'+dots(c.look,5)+'</div><button class="btn sec" style="min-height:40px" data-act="inc" data-t="look">+1</button></div></div>';
+    h+='<div class="counter"><div><b>Yopib o\'qish</b><div class="muted" style="font-size:12.5px">3 marta, xatosiz</div></div><div class="row"><div class="dots">'+dots(c.blind,3)+'</div><button class="btn sec" style="min-height:40px" data-act="inc" data-t="blind">+1</button></div></div>';
+    h+='<button class="btn ghost block" data-act="hide">'+I.eye.replace('<svg','<svg width="18" height="18"')+(hid?' Oyatni ko\'rsatish':' Oyatni yopish')+'</button>';
+    if(i>0)h+='<div class="note">Bog\'lash: keyingisiga o\'tishdan oldin 1-oyatdan '+(i+1)+'-oyatgacha bir marta qaramasdan, ketma-ket o\'qing.</div>';
+    h+='<div class="row"><button class="btn ghost" data-act="ai" data-d="-1" '+(i===0?'disabled':'')+'>Oldingi</button><button class="btn pri sp" data-act="ai" data-d="1">'+(i===v.length-1?'Butun sahifani sinash':'Keyingi oyat')+'</button></div></div>'}
+  else if(st===2){h+='<p class="muted" style="margin:0 0 12px">Butun sahifani yoddan o\'qing. Har oyatning birinchi so\'zi ko\'rsatilgan. Esingizdan chiqsa, oyatni bosib tekshiring.</p><div class="mushaf hide" id="test">'+v.map(function(x){return ayahHTML(x,{})}).join('')+'</div><div class="tapnote" id="rc">Ochilgan oyatlar: 0 / '+v.length+'</div><div style="height:14px"></div><button class="btn pri block" data-act="step" data-s="3">O\'qib bo\'ldim</button>'}
+  else{var r=view.mode==='review';var opened=view.opened||0;
+    h+='<div class="card stack"><h2>Sahifani qanchalik yaxshi bildingiz?</h2><p class="muted" style="margin:0">'+(opened?'Sinovda '+opened+' ta oyatni ochib ko\'rdingiz. ':'Sinovda hech qaysi oyatni ochmadingiz. ')+'Baho keyingi takror vaqtini belgilaydi.</p><div class="grade"><button data-grade="hard">Qiyin<small>ertaga</small></button><button data-grade="ok">O\'rtacha<small>'+fmtIv(p,'ok')+'</small></button><button data-grade="good" style="border-color:var(--accent)">Yaxshi<small>'+fmtIv(p,'good')+'</small></button></div></div>'}
+  a.innerHTML=h;
+  if(st===2)bindTest(v.length)}
+function fmtIv(p,g){var x=S.pages[p],l=x?x.lvl:-1;if(view.mode!=='review')return g==='good'?'3 kundan keyin':'ertaga';l=g==='good'?Math.min(IV.length-1,l+1):Math.max(0,l);var d=IV[l];return d===1?'ertaga':d+' kundan keyin'}
+function dots(n,m){var s='';for(var i=0;i<m;i++)s+='<i class="'+(i<n?'on':'')+'"></i>';return s}
+function bindTest(n){var t=$('#test');view.opened=0;t.addEventListener('click',function(e){var y=e.target.closest('.ayah');if(!y||y.classList.contains('rev'))return;y.classList.add('rev');y.querySelectorAll('.w').forEach(function(w){w.style.filter='none';w.style.opacity='1'});view.opened++;$('#rc').textContent='Ochilgan oyatlar: '+view.opened+' / '+n})}
+
+function vReview(a){view.tab='review';var d=dueList(),all=Object.keys(S.pages).map(Number).sort(function(x,y){return x-y});
+  var h='<h1>Takrorlash</h1><p class="muted" style="margin:4px 0 16px;font-size:13px">Yodlangan sahifa 1, 3, 7, 14, 30, 60 va 120 kundan keyin qaytariladi. Qiyin bo\'lsa, jadval boshidan boshlanadi.</p>';
+  if(d.length)h+='<div class="row" style="margin-bottom:8px"><h2 class="sp">Bugun</h2><span class="chip gold num">'+d.length+' ta</span></div><div class="list">'+d.map(function(p){return liPage(p,'review')}).join('')+'</div>';
+  else h+='<div class="card"><h2>Bugungi takrorlar tugadi</h2><p class="muted" style="margin:6px 0 0">'+(all.length?'Keyingi takror sanasi har bir sahifa yonida yozilgan.':'Birinchi sahifani yodlaganingizdan keyin bu yerda takrorlash jadvali paydo bo\'ladi.')+'</p>'+(all.length?'':'<button class="btn pri block" style="margin-top:12px" data-tab2="home">Birinchi sahifani yodlash</button>')+'</div>';
+  var rest=all.filter(function(p){return d.indexOf(p)<0});
+  if(rest.length)h+='<div class="row" style="margin:22px 0 8px"><h2 class="sp">Yodlangan sahifalar</h2><span class="chip num">'+rest.length+'</span></div><div class="list">'+rest.map(function(p){return liPage(p,'review')}).join('')+'</div>';
+  a.innerHTML=h}
+
+function vStats(a){view.tab='stats';var tot=Object.keys(S.pages).length,strong=0,t=today();for(var p in S.pages)if(S.pages[p].lvl>=4)strong++;
+  var h='<h1>Natijalar</h1><div class="stats3" style="margin:14px 0"><div class="stat"><b>'+tot+'</b><span>yodlangan</span></div><div class="stat"><b>'+strong+'</b><span>mustahkam</span></div><div class="stat"><b>'+streak()+'</b><span>kun ketma-ket</span></div></div>';
+  h+='<div class="card"><div class="row" style="margin-bottom:10px"><h2 class="sp">604 sahifa</h2><span class="muted num" style="font-size:13px">'+Math.round(tot/604*1000)/10+'%</span></div><div class="grid604">';
+  for(var j=0;j<30;j++){var a1=META.juz[j],b1=j===29?604:META.juz[j+1]-1;h+='<div class="jr"><span>'+(j+1)+'</span><div class="cells">';
+    for(var k=a1;k<=b1;k++){var x=S.pages[k],c=x?(x.due<=t?'due':x.lvl>=4?'l2':'l1'):'';h+='<i class="'+c+'" title="'+k+'-bet"></i>'}h+='</div></div>'}
+  h+='</div><div class="legend" style="margin-top:12px"><span><i style="background:var(--sunk)"></i>Yangi</span><span><i style="background:var(--accent-soft)"></i>Yodlangan</span><span><i style="background:var(--accent)"></i>Mustahkam</span><span><i style="background:var(--gold)"></i>Bugun takror</span></div></div>';
+  h+='<div class="card" style="margin-top:12px"><h2 style="margin-bottom:10px">Oxirgi 28 kun</h2><div class="days">';for(var i=27;i>=0;i--)h+='<i class="'+(S.days[today(-i)]?'on':'')+'" title="'+today(-i)+'"></i>';h+='</div></div>';
+  h+='<p class="note" style="margin-top:12px">Natijalar shu qurilmadagi brauzerda saqlanadi. Boshqa telefon yoki brauzerda yangidan boshlanadi.</p>';
+  a.innerHTML=h}
+
+function vAbout(a){view.tab='home';a.innerHTML='<div class="pagebar"><button class="icon" data-go="home" aria-label="Orqaga">'+I.back+'</button><b class="sp">Qanday yodlash kerak</b></div><div class="stack">'+
+'<div class="card"><h2 style="margin-bottom:8px">Har kuni bitta sahifa</h2><ol class="tips" style="padding-left:20px;margin:0"><li><b>Tinglang va tushuning.</b> Sahifani qori ovozida 2–3 marta eshiting, tarjimasini o\'qing.</li><li><b>Oyatma-oyat.</b> Har oyatni 5 marta qarab, 3 marta yopib o\'qing.</li><li><b>Bog\'lang.</b> Yangi oyatni oldingilari bilan ketma-ket o\'qing, shunda sahifa bir butun bo\'lib qoladi.</li><li><b>Yoddan sinang.</b> Butun sahifani qaramasdan o\'qing, keyin o\'zingizni rostgo\'ylik bilan baholang.</li><li><b>Takrorlang.</b> Ilova eski sahifalarni o\'z vaqtida qaytaradi. Yangi yodlashdan oldin takrorlarni tugating.</li></ol></div>'+
+'<div class="card"><h2 style="margin-bottom:8px">Foydali odatlar</h2><ul class="tips" style="padding-left:20px;margin:0"><li>Yodlashni har kuni bir xil vaqtda qiling, masalan bomdoddan keyin.</li><li>Doim bir xil mushaf nashrini ishlating. Sahifa ko\'rinishi xotirada qoladi.</li><li>Yodlaganingizni namozlarda o\'qing.</li><li>Haftada bir marta ustozga yoki qoriga eshittiring. Talaffuz va tajvidni faqat ustoz to\'g\'rilay oladi.</li></ul></div>'+
+'<div class="card"><h2 style="margin-bottom:8px">Manbalar</h2><p style="margin:0 0 8px">Arabcha matn <b>Tanzil.net</b> loyihasining Uthmoniy rasm nusxasidan so\'zma-so\'z olingan. Sahifa va juz chegaralari Madina mushafi (604 bet) bo\'yicha.</p><p style="margin:0 0 8px">Tarjima va izohlar: <b>Shayx Muhammad Sodiq Muhammad Yusuf</b>, QuranEnc.com nashri (uzbek_sadiq, 1.0.1-versiya). Matn o\'zgartirilmagan, asl kirill yozuvida berilgan.</p><p style="margin:0">Audio: EveryAyah.com.</p></div>'+
+'<div class="note">Bu ilova ustozning o\'rnini bosmaydi. Matnda xato ko\'rsangiz, shu zahoti xabar bering.</div></div>'}
+
+/* ---------- audio ---------- */
+function pad(n){return String(n).padStart(3,'0')}
+function stopAudio(){audioOn=false;audioQ=[];if(audio){try{audio.pause()}catch(e){}}var b=$('#playb');if(b)b.innerHTML=I.play}
+function playKeys(keys,label,loop){stopAudio();if(!audio){audio=new Audio();audio.addEventListener('ended',nextAudio);audio.addEventListener('error',audioErr)}
+  audioQ=keys.slice();audioQ.loop=loop?keys.slice():null;audioOn=true;var b=$('#playb');if(b)b.innerHTML=I.stop;nextAudio()}
+function nextAudio(){if(!audioOn)return;if(!audioQ.length){if(audioQ.loop){var l=audioQ.loop;audioQ=l.slice();audioQ.loop=l}else{stopAudio();setA('Tugadi');return}}
+  var k=audioQ.shift().split(':');audio.src='https://everyayah.com/data/'+S.rec+'/'+pad(k[0])+pad(k[1])+'.mp3';setA(k[0]+':'+k[1]+' o\'qilmoqda');
+  var pr=audio.play();if(pr&&pr.catch)pr.catch(audioErr)}
+function setA(t){var s=$('#astat');if(s)s.textContent=t}
+function audioErr(){if(!audioOn)return;stopAudio();var s=$('#astat'),p=view.p||1;if(s)s.innerHTML='Bu yerda audio ochilmadi. <a href="https://quran.com/page/'+p+'" target="_blank" rel="noopener">quran.com\'da tinglash</a>'}
+
+/* ---------- events ---------- */
+document.addEventListener('change',function(e){if(e.target.id==='rec'){S.rec=e.target.value;save();stopAudio()}
+  if(e.target.id==='trt'){S.tr=e.target.checked;save();render()}});
+document.addEventListener('click',function(e){var t=e.target.closest('button,[data-read]');if(!t||t.disabled)return;var d=t.dataset;
+  if(d.tab2){go({name:d.tab2});return}
+  if(d.go){go({name:d.go});return}
+  if(d.read){var p=+d.read;if(p>=1&&p<=604)go({name:'reader',p:p,lastPage:p});return}
+  if(d.plan){S.plan=d.plan;save();render();return}
+  if(d.qt){view.tab2=d.qt;render();return}
+  if(d.fn){var el=document.getElementById('fn'+d.fn.replace(':','_'));el.hidden=!el.hidden;t.textContent=el.hidden?'Izohni ko\'rish':'Izohni yopish';return}
+  if(d.grade){var p2=view.p;schedule(p2,view.mode==='review'?d.grade:(d.grade==='good'?'good0':'new'));
+    if(view.mode!=='review'&&d.grade==='good'){S.pages[p2].lvl=1;S.pages[p2].due=today(IV[1]);save()}
+    toast(view.mode==='review'?'Takror saqlandi':p2+'-bet yodlanganlar ro\'yxatiga qo\'shildi');go({name:view.mode==='review'?'review':'home'});return}
+  switch(d.act){
+    case 'learn':go({name:'learn',p:+d.p,step:0,mode:S.pages[+d.p]?'review':'new'});break;
+    case 'review':go({name:'learn',p:+d.p,step:2,mode:'review'});break;
+    case 'exit':go({name:view.mode==='review'?'review':'home'});break;
+    case 'step':view.step=+d.s;view.ai=0;view.cnt={look:0,blind:0};view.hid=false;stopAudio();drawLearn($('#app'));window.scrollTo(0,0);break;
+    case 'inc':view.cnt=view.cnt||{look:0,blind:0};view.cnt[d.t]=Math.min(d.t==='look'?5:3,view.cnt[d.t]+1);if(d.t==='blind')view.hid=true;drawLearn($('#app'));break;
+    case 'hide':view.hid=!view.hid;drawLearn($('#app'));break;
+    case 'ai':var n=(view.ai||0)+(+d.d);if(n>=view.v.length){view.step=2;stopAudio();drawLearn($('#app'));window.scrollTo(0,0);break}
+      view.ai=Math.max(0,n);view.cnt={look:0,blind:0};view.hid=false;stopAudio();drawLearn($('#app'));break;
+    case 'play':if(audioOn){stopAudio();setA('To\'xtatildi');break}getPage(+d.p).then(function(v){playKeys(v.map(function(x){return x[0]+':'+x[1]}))});break;
+    case 'playone':if(audioOn){stopAudio();break}playKeys([d.k],'',true);break;
+    case 'openpn':var v2=+$('#pn').value;if(v2>=1&&v2<=604)go({name:'reader',p:v2});else toast('1 dan 604 gacha raqam yozing');break;
+  }});
+document.addEventListener('click',function(e){var y=e.target.closest('#one.hide .ayah');if(y){y.parentNode.classList.remove('hide')}},true);
+
+fetch('data/meta.json').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(m){META=m;render()}).catch(function(){$('#app').innerHTML='<div class="note" style="margin-top:40px">Ma\'lumotlarni yuklab bo\'lmadi. Internet aloqasini tekshirib, sahifani yangilang.</div>'});
+})();
+</script>
